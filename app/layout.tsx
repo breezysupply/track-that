@@ -35,9 +35,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ThemeWrapper>
-          <div className="flex min-h-screen">
+          <div className="flex flex-col md:flex-row min-h-screen">
             <SideMenu />
-            <main className="flex-1 p-4 overflow-auto">
+            <main className="flex-1 p-4 md:ml-64 overflow-auto">
               {children}
             </main>
           </div>
