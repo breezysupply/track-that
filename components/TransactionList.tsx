@@ -34,7 +34,7 @@ export default function TransactionList({ transactions, onDeleteTransaction }: T
                 -${typeof transaction.amount === 'number' ? transaction.amount.toFixed(2) : '0.00'}
               </span>
               <button 
-                onClick={() => handleDeleteClick(transaction.id)}
+                onClick={() => handleDeleteClick(transaction.id.toString())}
                 className="text-gray-400 hover:text-red-600 dark:hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
               >
                 {/* Delete icon */}

@@ -9,6 +9,13 @@ import InitialBudgetPopup from './InitialBudgetPopup';
 import EndMonthPopup from './EndMonthPopup';
 import confetti from 'canvas-confetti';
 
+// Update the props interface for InitialBudgetPopup
+export interface InitialBudgetPopupProps {
+  onBudgetSet: (newBudget: number, newBudgetName: string) => void;
+  month: string;
+  year: number;
+}
+
 export default function TrackThatApp() {
   const [budget, setBudget] = useState<number | null>(null);
   const [balance, setBalance] = useState<number | null>(null);
@@ -80,9 +87,10 @@ export default function TrackThatApp() {
 
   const addTransaction = (description: string, amount: number) => {
     const newTransaction: Transaction = {
-      id: Date.now().toString(),
+      id: Date.now().toString(),  // Ensure this is a string
       description,
-      amount
+      amount,
+      date: new Date().toISOString()  // Add the date property
     };
     const updatedTransactions = [...transactions, newTransaction];
     setTransactions(updatedTransactions);
@@ -164,7 +172,7 @@ export default function TrackThatApp() {
   };
 
   if (showInitialBudgetPopup) {
-    return <InitialBudgetPopup onBudgetSet={handleInitialBudgetSet} month={currentMonth} year={currentYear} />;
+    return <InitialBudgetPopup onBudgetSet={handleInitialBudgetSet} />;
   }
 
   return (
@@ -183,7 +191,7 @@ export default function TrackThatApp() {
           onDeleteTransaction={deleteTransaction}
         />
         <button
-          onClick={() => setShowEndBudgetPopup(true)}
+          onClick={handleEndMonth}
           className="mt-4 w-full bg-red-500 text-white p-2 rounded hover:bg-red-600 transition duration-200"
         >
           End Budget Period

@@ -2,12 +2,20 @@
 
 import React, { useEffect, useState } from 'react';
 
+interface Transaction {
+  id: string;
+  description: string;
+  amount: number;
+  date: string;
+  // Add any other properties that a transaction might have
+}
+
 interface HistoryEntry {
   id: string;
   title: string;
   budget: number;
   finalBalance: number | null;
-  transactions: any[];
+  transactions: Transaction[];
   createdAt?: number; // Make this optional
 }
 

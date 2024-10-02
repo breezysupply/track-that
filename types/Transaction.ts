@@ -1,6 +1,6 @@
 export interface Transaction {
-  id: number;
+  id: string;  // Ensure this is string, not number
   amount: number;
   description: string;
-  date: string;
+  date?: string;  // Make date optional by adding '?'
 }

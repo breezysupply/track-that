@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Transaction } from '../types/Transaction';
 
 interface TransactionFormProps {
   onAddTransaction: (description: string, amount: number) => void;
