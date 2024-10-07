@@ -1,47 +1,27 @@
-import type { Metadata } from "next";
-import localFont from "next/font/local";
-import "./globals.css";
-import SideMenu from '../components/SideMenu';
-import ThemeWrapper from '../components/ThemeWrapper';
+'use client';
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
-
-export const metadata: Metadata = {
-  title: {
-    default: 'Track That App',
-    template: '%s | Track That App',
-  },
-  description: 'Your personal finance tracker',
-  icons: {
-    icon: '/favicon.ico',
-  },
-};
+import { useEffect } from 'react';
+import './globals.css';
+import SideMenu from '../components/SideMenu'; // Adjust the import path as needed
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: {
+  children: React.ReactNode
+}) {
+  useEffect(() => {
+    document.documentElement.classList.add('dark');
+  }, []);
+
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <ThemeWrapper>
-          <div className="flex flex-col md:flex-row min-h-screen">
-            <SideMenu />
-            <main className="flex-1 p-4 md:ml-64 overflow-auto">
-              {children}
-            </main>
-          </div>
-        </ThemeWrapper>
+    <html lang="en" className="dark">
+      <body className="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+        <div className="flex">
+          <SideMenu />
+          <main className="flex-1 p-4">
+            {children}
+          </main>
+        </div>
       </body>
     </html>
   );

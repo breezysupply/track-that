@@ -13,6 +13,15 @@ const config: Config = {
       fontFamily: {
         sans: ['Inter', ...fontFamily.sans],
       },
+      animation: {
+        flash: 'flash 0.5s',
+      },
+      keyframes: {
+        flash: {
+          '0%, 100%': { opacity: 0 },
+          '50%': { opacity: 0.5 },
+        },
+      },
     },
   },
   plugins: [],

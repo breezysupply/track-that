@@ -23,32 +23,34 @@ export default function TransactionForm({ onAddTransaction }: TransactionFormPro
   return (
     <form onSubmit={handleSubmit} className="mb-6">
       <div className="mb-4">
-        <label htmlFor="amount" className="block mb-2 text-gray-800 dark:text-gray-200">Amount:</label>
+        <label htmlFor="amount" className="block mb-2 text-gray-300 font-medium font-poppins">Amount:</label>
         <input
           type="number"
           id="amount"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
-          className="w-full p-3 border rounded bg-white dark:bg-gray-600 text-gray-800 dark:text-gray-200 text-lg"
+          className="input text-base appearance-none monospace"
           required
           step="0.01"
           min="0.01"
+          placeholder="0.00"
         />
       </div>
       <div className="mb-4">
-        <label htmlFor="description" className="block mb-2 text-gray-800 dark:text-gray-200">Description:</label>
+        <label htmlFor="description" className="block mb-2 text-gray-300 font-medium font-poppins">Description:</label>
         <input
           type="text"
           id="description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          className="w-full p-3 border rounded bg-white dark:bg-gray-600 text-gray-800 dark:text-gray-200 text-lg"
+          className="input text-base font-poppins"
           required
+          placeholder="Enter transaction description"
         />
       </div>
       <button 
         type="submit" 
-        className="w-full bg-green-500 text-white p-3 rounded hover:bg-green-600 transition duration-200 text-lg"
+        className="btn btn-primary w-full text-base font-poppins"
       >
         Add Transaction
       </button>

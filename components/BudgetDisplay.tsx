@@ -20,6 +20,12 @@ export default function BudgetDisplay({ budget, balance, onBudgetChange, budgetN
   const spent = budget !== null && balance !== null ? budget - balance : 0;
   const progressPercentage = budget ? Math.min((spent / budget) * 100, 100) : 0;
 
+  const getProgressBarColor = () => {
+    if (progressPercentage >= 100) return 'bg-red-600';
+    if (progressPercentage >= 75) return 'bg-orange-500';
+    return 'bg-blue-600';
+  };
+
   const handleEditClick = () => {
     if (isEditingBudget) {
       const parsedBudget = parseFloat(newBudget);
@@ -46,18 +52,18 @@ export default function BudgetDisplay({ budget, balance, onBudgetChange, budgetN
   };
 
   return (
-    <div className="bg-gray-800 dark:bg-gray-900 text-white p-6">
+    <div className="bg-gray-800 dark:bg-gray-900 text-white p-6 rounded-lg shadow-lg">
       <div className="flex justify-between items-center mb-4">
         {isEditingName ? (
           <input
             type="text"
             value={newBudgetName}
             onChange={handleNameChange}
-            className="text-2xl font-bold bg-transparent border-b border-white"
+            className="text-2xl font-semibold bg-transparent border-b border-white w-full font-poppins"
             maxLength={75}
           />
         ) : (
-          <h2 className="text-2xl font-bold">{budgetName}</h2>
+          <h2 className="text-2xl font-semibold font-poppins">{budgetName}</h2>
         )}
         <button onClick={handleNameEditClick} className="text-white ml-2">
           <FaEdit />
@@ -65,8 +71,8 @@ export default function BudgetDisplay({ budget, balance, onBudgetChange, budgetN
       </div>
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center">
-          <span className="text-3xl font-bold mr-2">${balance?.toFixed(2)}</span>
-          <span className="text-sm">left</span>
+          <span className="text-3xl font-bold mr-2 monospace">${balance?.toFixed(2)}</span>
+          <span className="text-sm font-poppins">left</span>
         </div>
         <div className="flex items-center">
           {isEditingBudget ? (
@@ -74,10 +80,10 @@ export default function BudgetDisplay({ budget, balance, onBudgetChange, budgetN
               type="number"
               value={newBudget}
               onChange={handleBudgetChange}
-              className="w-32 p-1 mr-2 text-black rounded text-xl"
+              className="w-32 p-1 mr-2 text-black rounded text-xl monospace"
             />
           ) : (
-            <span className="text-xl mr-2">/ ${budget?.toFixed(2)}</span>
+            <span className="text-xl mr-2 monospace">/ ${budget?.toFixed(2)}</span>
           )}
           <button onClick={handleEditClick} className="text-white">
             <FaEdit />
@@ -85,13 +91,13 @@ export default function BudgetDisplay({ budget, balance, onBudgetChange, budgetN
         </div>
       </div>
       <div className="mb-2">
-        <div className="flex justify-between text-sm mb-1">
+        <div className="flex justify-between text-sm mb-1 font-poppins">
           <span>SPENT</span>
-          <span>${spent.toFixed(2)}</span>
+          <span className="monospace">${spent.toFixed(2)}</span>
         </div>
         <div className="bg-gray-600 dark:bg-gray-700 rounded-full h-2">
           <div
-            className={`rounded-full h-2 ${balance && balance < 0 ? 'bg-red-600' : 'bg-blue-600'}`}
+            className={`rounded-full h-2 transition-all duration-300 ease-in-out ${getProgressBarColor()}`}
             style={{ width: `${progressPercentage}%` }}
           ></div>
         </div>
