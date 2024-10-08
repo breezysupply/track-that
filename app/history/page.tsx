@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Budget } from '../types/Budget';
+import { Budget } from '../../types/Budget';
 
 interface EndedBudget extends Budget {
   endedAt: string;
