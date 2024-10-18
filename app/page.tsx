@@ -6,9 +6,8 @@ import AddBudgetCard from '../components/AddBudgetCard';
 import BudgetCard from '../components/BudgetCard';
 import { Budget } from '../types/Budget';
 import { useAuth } from '../components/AuthContext';
-import { collection, query, where, getDocs, deleteDoc, doc, addDoc, runTransaction } from 'firebase/firestore';
+import { collection, query, where, getDocs, runTransaction } from 'firebase/firestore';
 import { db } from '../src/firebase';
-import Link from 'next/link';
 
 export default function Home() {
   const [budgets, setBudgets] = useState<Budget[]>([]);

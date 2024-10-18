@@ -7,7 +7,8 @@ import { useRouter } from 'next/navigation';
 const Signup: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const [error, setError] = useState('');
   const { signup } = useAuth();
   const router = useRouter();
 
@@ -17,7 +18,7 @@ const Signup: React.FC = () => {
       await signup(email, password);
       router.push('/');
     } catch (err) {
-      setError('Failed to create an account');
+      console.error("Signup error:", err);
     }
   };
 

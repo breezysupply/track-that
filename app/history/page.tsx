@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { Budget } from '../../types/Budget';
 import { useAuth } from '../../components/AuthContext';
-import { collection, query, where, getDocs, deleteDoc, writeBatch } from 'firebase/firestore';
+import { collection, query, where, getDocs, writeBatch } from 'firebase/firestore';
 import { db } from '../../src/firebase';
 
 interface EndedBudget extends Budget {
@@ -13,12 +13,6 @@ interface EndedBudget extends Budget {
 export default function History() {
   const [history, setHistory] = useState<EndedBudget[]>([]);
   const { user } = useAuth();
-
-  useEffect(() => {
-    if (user) {
-      loadHistory();
-    }
-  }, [user]);
 
   const loadHistory = async () => {
     if (!user) return;
@@ -31,6 +25,12 @@ export default function History() {
     );
     setHistory(sortedHistory);
   };
+
+  useEffect(() => {
+    if (user) {
+      loadHistory();
+    }
+  }, [user]);
 
   const clearHistory = async () => {
     if (window.confirm('Are you sure you want to clear all history? This action cannot be undone.')) {

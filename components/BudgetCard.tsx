@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Budget } from '../types/Budget';
 import ConfirmationPopup from './ConfirmationPopup';
-import { doc, deleteDoc, getFirestore } from 'firebase/firestore';
 
 interface BudgetCardProps {
   budget: Budget;
