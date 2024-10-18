@@ -4,21 +4,37 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import TrackThatApp from '../../../components/trackthatApp';
 import { Budget } from '../../../types/Budget';
+import { useAuth } from '../../../components/AuthContext';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../../../src/firebase';
 
 export default function BudgetPage({ params }: { params: { id: string } }) {
   const [budget, setBudget] = useState<Budget | null>(null);
   const router = useRouter();
+  const { user, loading } = useAuth();
 
   useEffect(() => {
-    const savedBudget = localStorage.getItem(`budget_${params.id}`);
-    if (savedBudget) {
-      setBudget(JSON.parse(savedBudget));
-    } else {
-      router.push('/'); // Redirect to home if budget not found
+    if (!loading && !user) {
+      router.push('/auth');
     }
-  }, [params.id, router]);
+  }, [user, loading, router]);
 
-  if (!budget) {
+  useEffect(() => {
+    const fetchBudget = async () => {
+      if (user) {
+        const docRef = doc(db, 'budgets', params.id);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists() && docSnap.data().userId === user.uid) {
+          setBudget({ id: docSnap.id, ...docSnap.data() } as Budget);
+        } else {
+          router.push('/');
+        }
+      }
+    };
+    fetchBudget();
+  }, [params.id, user, router]);
+
+  if (loading || !budget) {
     return <div>Loading budget... Please wait.</div>;
   }
 

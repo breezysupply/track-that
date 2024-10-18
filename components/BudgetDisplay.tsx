@@ -52,7 +52,7 @@ export default function BudgetDisplay({ budget, balance, onBudgetChange, budgetN
   };
 
   return (
-    <div className="bg-gray-800 dark:bg-gray-900 text-white p-6 rounded-lg shadow-lg">
+    <div className="bg-gray-900 text-white p-6 rounded-lg shadow-lg">
       <div className="flex justify-between items-center mb-4">
         {isEditingName ? (
           <input
@@ -91,16 +91,14 @@ export default function BudgetDisplay({ budget, balance, onBudgetChange, budgetN
         </div>
       </div>
       <div className="mb-2">
-        <div className="flex justify-between text-sm mb-1 font-poppins">
-          <span>SPENT</span>
-          <span className="monospace">${spent.toFixed(2)}</span>
-        </div>
-        <div className="bg-gray-600 dark:bg-gray-700 rounded-full h-2">
-          <div
-            className={`rounded-full h-2 transition-all duration-300 ease-in-out ${getProgressBarColor()}`}
-            style={{ width: `${progressPercentage}%` }}
-          ></div>
-        </div>
+        <span className="text-sm font-poppins">SPENT</span>
+        <span className="float-right text-sm font-poppins">${spent.toFixed(2)}</span>
+      </div>
+      <div className="w-full bg-gray-700 rounded-full h-2.5">
+        <div
+          className={`h-2.5 rounded-full ${getProgressBarColor()}`}
+          style={{ width: `${progressPercentage}%` }}
+        ></div>
       </div>
     </div>
   );

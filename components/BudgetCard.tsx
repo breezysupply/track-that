@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Budget } from '../types/Budget';
 import ConfirmationPopup from './ConfirmationPopup';
+import { doc, deleteDoc, getFirestore } from 'firebase/firestore';
 
 interface BudgetCardProps {
   budget: Budget;
@@ -22,23 +23,33 @@ export default function BudgetCard({ budget, onEndBudget }: BudgetCardProps) {
 
   const handleEndBudget = (e: React.MouseEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     setShowConfirmation(true);
   };
 
-  const confirmEndBudget = () => {
-    onEndBudget(budget);
-    setShowConfirmation(false);
+  const confirmEndBudget = async () => {
+    try {
+      await onEndBudget(budget);
+      setShowConfirmation(false);
+    } catch (error) {
+      console.error("Error ending budget:", error);
+      if (error instanceof Error) {
+        alert(`Failed to end budget: ${error.message}`);
+      } else {
+        alert("Failed to end budget. Please try again.");
+      }
+    }
   };
 
   return (
     <>
       <Link href={`/budget/${budget.id}`}>
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-200">
-          <h2 className="text-xl font-semibold mb-4">{name}</h2>
-          <p className="text-gray-600 dark:text-gray-400 mb-4">
+        <div className="bg-gray-800 rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-200">
+          <h2 className="text-xl font-semibold mb-4 text-white">{name}</h2>
+          <p className="text-gray-300 mb-4">
             Spent: ${spent.toFixed(2)} / ${amount.toFixed(2)}
           </p>
-          <div className="mb-4 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+          <div className="mb-4 bg-gray-700 rounded-full h-2">
             <div
               className={`rounded-full h-2 transition-all duration-300 ease-in-out ${getProgressBarColor()}`}
               style={{ width: `${Math.min(percentage, 100)}%` }}
@@ -46,7 +57,7 @@ export default function BudgetCard({ budget, onEndBudget }: BudgetCardProps) {
           </div>
           <button
             onClick={handleEndBudget}
-            className="btn btn-danger w-full"
+            className="btn btn-danger w-full bg-red-500 text-white py-2 rounded hover:bg-red-600"
           >
             End Budget
           </button>

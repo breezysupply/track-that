@@ -3,25 +3,45 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import InitialBudgetPopup from '../../components/InitialBudgetPopup';
+import { useAuth } from '../../components/AuthContext';
+import { addDoc, collection } from 'firebase/firestore';
+import { db } from '../../src/firebase';
 
 export default function NewBudgetPage() {
   const router = useRouter();
+  const { user } = useAuth();
 
-  const handleBudgetSet = (amount: number, name: string) => {
-    // Here you would typically save the new budget to your backend or local storage
+  console.log('NewBudgetPage rendered, user:', user);
+
+  const handleBudgetSet = async (amount: number, name: string) => {
+    console.log('handleBudgetSet called with:', amount, name);
+    if (!user) {
+      console.log('No user, redirecting to auth');
+      router.push('/auth');
+      return;
+    }
+
     const newBudget = {
-      id: Date.now().toString(), // This is a simple way to generate a unique ID
+      userId: user.uid,
       name,
       amount,
       balance: amount,
       transactions: []
     };
 
-    // Save to localStorage for now
-    localStorage.setItem(`budget_${newBudget.id}`, JSON.stringify(newBudget));
-
-    // Redirect to the new budget page
-    router.push(`/budget/${newBudget.id}`);
+    try {
+      console.log('Attempting to add new budget:', newBudget);
+      const docRef = await addDoc(collection(db, 'budgets'), newBudget);
+      console.log('Budget added successfully, redirecting to:', `/budget/${docRef.id}`);
+      router.push(`/budget/${docRef.id}`);
+    } catch (error) {
+      console.error("Error adding budget: ", error);
+      if (error instanceof Error) {
+        alert(`Failed to create budget: ${error.message}`);
+      } else {
+        alert("Failed to create budget. Please try again.");
+      }
+    }
   };
 
   return (

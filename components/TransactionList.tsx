@@ -24,18 +24,23 @@ export default function TransactionList({ transactions, onDeleteTransaction }: T
 
   return (
     <div>
-      <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-gray-200">Recent Transactions</h2>
+      <h2 className="text-xl font-semibold mb-4 text-gray-300">Recent Transactions</h2>
       <div className="space-y-2">
-        {transactions.map((transaction) => (
-          <div key={transaction.id} className="bg-gray-100 dark:bg-gray-600 p-3 rounded flex justify-between items-center group">
-            <span className="text-gray-800 dark:text-gray-200">{transaction.description}</span>
+        {transactions.map((transaction, index) => (
+          <div 
+            key={transaction.id} 
+            className={`p-3 rounded flex justify-between items-center group ${
+              index % 2 === 0 ? 'bg-gray-700' : 'bg-gray-600'
+            }`}
+          >
+            <span className="text-gray-200">{transaction.description}</span>
             <div className="flex items-center">
-              <span className="text-red-600 dark:text-red-400 mr-2">
+              <span className="text-red-400 mr-2">
                 -${typeof transaction.amount === 'number' ? transaction.amount.toFixed(2) : '0.00'}
               </span>
               <button 
                 onClick={() => handleDeleteClick(transaction.id.toString())}
-                className="text-gray-400 hover:text-red-600 dark:hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                className="text-gray-400 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
               >
                 {/* Delete icon */}
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">

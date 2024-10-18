@@ -1,27 +1,26 @@
-'use client';
-
-import { useEffect } from 'react';
 import './globals.css';
-import SideMenu from '../components/SideMenu'; // Adjust the import path as needed
+import { Inter } from 'next/font/google';
+import { AuthProvider } from '../components/AuthContext';
+import SideMenu from '../components/SideMenu';
+
+const inter = Inter({ subsets: ['latin'] });
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  useEffect(() => {
-    document.documentElement.classList.add('dark');
-  }, []);
-
   return (
-    <html lang="en" className="dark">
-      <body className="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-        <div className="flex">
-          <SideMenu />
-          <main className="flex-1 p-4">
-            {children}
-          </main>
-        </div>
+    <html lang="en">
+      <body className={`${inter.className} bg-gray-900 text-white`}>
+        <AuthProvider>
+          <div className="flex">
+            <SideMenu />
+            <main className="flex-1 p-4">
+              {children}
+            </main>
+          </div>
+        </AuthProvider>
       </body>
     </html>
   );

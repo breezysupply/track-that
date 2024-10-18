@@ -6,6 +6,9 @@ import TransactionForm from './TransactionForm';
 import TransactionList from './TransactionList';
 import { Budget } from '../types/Budget';
 import { Transaction } from '../types/Transaction';
+import { updateDoc, deleteDoc, doc, runTransaction, collection } from 'firebase/firestore';
+import { db } from '../src/firebase';
+import { useRouter } from 'next/navigation';
 
 interface TrackThatAppProps {
   initialBudget: Budget;
@@ -13,25 +16,19 @@ interface TrackThatAppProps {
 
 export default function TrackThatApp({ initialBudget }: TrackThatAppProps) {
   const [budget, setBudget] = useState<Budget | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     if (initialBudget) {
-      const savedBudget = localStorage.getItem(`budget_${initialBudget.id}`);
-      if (savedBudget) {
-        setBudget(JSON.parse(savedBudget));
-      } else {
-        setBudget(initialBudget);
-      }
+      setBudget(initialBudget);
     }
   }, [initialBudget]);
 
   useEffect(() => {
     if (budget) {
-      localStorage.setItem(`budget_${budget.id}`, JSON.stringify(budget));
+      updateDoc(doc(db, 'budgets', budget.id), budget);
     }
   }, [budget]);
-
-  console.log('Current budget state:', budget);
 
   if (!budget) {
     return <div>Loading budget details... Please wait.</div>;
@@ -68,8 +65,35 @@ export default function TrackThatApp({ initialBudget }: TrackThatAppProps) {
     });
   };
 
+  const endBudget = async () => {
+    if (budget) {
+      try {
+        const endedBudget = {
+          ...budget,
+          endedAt: new Date().toISOString()
+        };
+
+        await runTransaction(db, async (transaction) => {
+          // Add the ended budget to history in Firestore
+          const historyRef = doc(collection(db, 'budget_history'));
+          transaction.set(historyRef, endedBudget);
+
+          // Delete the budget from Firestore
+          const budgetRef = doc(db, 'budgets', budget.id);
+          transaction.delete(budgetRef);
+        });
+
+        alert('Budget ended successfully');
+        router.push('/history');
+      } catch (error) {
+        console.error("Error ending budget:", error);
+        alert("Failed to end budget. Please try again.");
+      }
+    }
+  };
+
   return (
-    <div className="max-w-4xl mx-auto bg-gray-200 dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden font-mono md:mt-4">
+    <div className="max-w-4xl mx-auto bg-gray-800 shadow-lg rounded-lg overflow-hidden font-mono md:mt-4">
       <BudgetDisplay 
         budget={budget.amount}
         balance={budget.balance}
@@ -77,12 +101,18 @@ export default function TrackThatApp({ initialBudget }: TrackThatAppProps) {
         budgetName={budget.name}
         onBudgetNameChange={(newName) => setBudget(prev => ({ ...prev!, name: newName }))}
       />
-      <div className="p-4 md:p-6 bg-white dark:bg-gray-700">
+      <div className="p-4 md:p-6 bg-gray-700">
         <TransactionForm onAddTransaction={addTransaction} />
         <TransactionList 
           transactions={budget.transactions} 
           onDeleteTransaction={deleteTransaction}
         />
+        <button 
+          onClick={endBudget}
+          className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+        >
+          End Budget
+        </button>
       </div>
     </div>
   );

@@ -7,50 +7,42 @@ interface InitialBudgetPopupProps {
 }
 
 export default function InitialBudgetPopup({ onBudgetSet }: InitialBudgetPopupProps) {
-  const [budget, setBudget] = useState('');
-  const [budgetName, setBudgetName] = useState('');
+  const [amount, setAmount] = useState('');
+  const [name, setName] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const parsedBudget = parseFloat(budget);
-    if (!isNaN(parsedBudget) && parsedBudget > 0 && budgetName.trim() !== '') {
-      onBudgetSet(parsedBudget, budgetName.trim());
-    }
+    onBudgetSet(parseFloat(amount), name);
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-md w-full mx-auto">
-      <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-gray-200">Set New Budget</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label htmlFor="budgetName" className="block mb-2 text-gray-700 dark:text-gray-300">Budget Name:</label>
+    <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label htmlFor="name" className="block text-sm font-medium text-gray-300">Budget Name</label>
           <input
             type="text"
-            id="budgetName"
-            value={budgetName}
-            onChange={(e) => setBudgetName(e.target.value.slice(0, 75))}
-            className="w-full p-2 border rounded bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200"
-            maxLength={75}
+            id="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             required
+            className="mt-1 block w-full rounded-md bg-gray-700 border-gray-600 text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
           />
         </div>
-        <div className="mb-4">
-          <label htmlFor="budget" className="block mb-2 text-gray-700 dark:text-gray-300">Budget Amount:</label>
+        <div>
+          <label htmlFor="amount" className="block text-sm font-medium text-gray-300">Initial Amount</label>
           <input
             type="number"
-            id="budget"
-            value={budget}
-            onChange={(e) => setBudget(e.target.value)}
-            className="w-full p-2 border rounded bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200"
+            id="amount"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
             required
-            min="0.01"
+            min="0"
             step="0.01"
+            className="mt-1 block w-full rounded-md bg-gray-700 border-gray-600 text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
           />
         </div>
-        <button 
-          type="submit" 
-          className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition duration-200"
-        >
+        <button type="submit" className="w-full bg-blue-600 text-white rounded-md py-2 px-4 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800">
           Create Budget
         </button>
       </form>
