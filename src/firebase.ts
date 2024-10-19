@@ -1,4 +1,4 @@
-import { initializeApp, getApps } from 'firebase/app';
+import { initializeApp, getApps, FirebaseApp } from 'firebase/app';
 import { getAuth, Auth } from 'firebase/auth';
 import { getFirestore, Firestore } from 'firebase/firestore';
 import { getAnalytics, Analytics } from "firebase/analytics";
@@ -13,10 +13,10 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
 };
 
-let app;
+let app: FirebaseApp;
 let auth: Auth;
 let db: Firestore;
-let analytics: Analytics;
+let analytics: Analytics | undefined;
 
 if (typeof window !== 'undefined') {
   if (!getApps().length) {
@@ -25,6 +25,7 @@ if (typeof window !== 'undefined') {
       app = initializeApp(firebaseConfig);
     } catch (error) {
       console.error('Error initializing Firebase:', error);
+      throw error; // Re-throw the error to prevent further execution
     }
   } else {
     app = getApps()[0];
