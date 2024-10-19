@@ -1,4 +1,9 @@
-import { Transaction } from './Transaction';
+export interface Transaction {
+  id: string;
+  amount: number;
+  description: string;
+  date: string;
+}
 
 export interface Budget {
   id: string;

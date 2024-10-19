@@ -26,7 +26,18 @@ export default function TrackThatApp({ initialBudget }: TrackThatAppProps) {
 
   useEffect(() => {
     if (budget) {
-      updateDoc(doc(db, 'budgets', budget.id), budget);
+      const budgetToUpdate = {
+        name: budget.name,
+        amount: budget.amount,
+        balance: budget.balance,
+        transactions: budget.transactions.map(t => ({
+          id: t.id,
+          amount: t.amount,
+          description: t.description,
+          date: t.date
+        }))
+      };
+      updateDoc(doc(db, 'budgets', budget.id), budgetToUpdate);
     }
   }, [budget]);
 
