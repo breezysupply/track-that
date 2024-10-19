@@ -1,6 +1,6 @@
 import { initializeApp, getApps } from 'firebase/app';
 import { getAuth, Auth } from 'firebase/auth';
-import { getFirestore as getFirestoreFromFirebase, Firestore } from 'firebase/firestore';
+import { getFirestore, Firestore } from 'firebase/firestore';
 import { getAnalytics, Analytics } from "firebase/analytics";
 
 const firebaseConfig = {
@@ -13,16 +13,17 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
 };
 
-let auth: Auth | undefined;
-let db: Firestore | undefined;
-let analytics: Analytics | undefined;
+let app;
+let auth: Auth;
+let db: Firestore;
+let analytics: Analytics;
 
 if (typeof window !== 'undefined' && !getApps().length) {
   try {
     console.log('Initializing Firebase with config:', JSON.stringify(firebaseConfig));
-    const app = initializeApp(firebaseConfig);
+    app = initializeApp(firebaseConfig);
     auth = getAuth(app);
-    db = getFirestoreFromFirebase(app);
+    db = getFirestore(app);
     analytics = getAnalytics(app);
     console.log('Firebase initialized successfully');
   } catch (error) {
@@ -32,7 +33,6 @@ if (typeof window !== 'undefined' && !getApps().length) {
 
 export { auth, db, analytics };
 
-// Add this function at the end of the file
 export function getFirestoreInstance(): Firestore {
   if (!db) {
     throw new Error('Firestore is not initialized');

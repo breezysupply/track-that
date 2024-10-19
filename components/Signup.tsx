@@ -23,8 +23,13 @@ const [error, setError] = useState('');
       onSuccess();
     } catch (err) {
       console.error('Signup error:', err);
-      setError('Failed to sign up. Please try again.');
-      onError('Failed to sign up. Please try again.');
+      if (err instanceof Error) {
+        setError(`Signup failed: ${err.message}`);
+        onError(`Signup failed: ${err.message}`);
+      } else {
+        setError('Failed to sign up. Please try again.');
+        onError('Failed to sign up. Please try again.');
+      }
     }
   };
 

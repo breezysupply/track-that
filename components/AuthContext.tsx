@@ -44,24 +44,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = async (email: string, password: string) => {
     try {
-      if (auth) {
-        await signInWithEmailAndPassword(auth, email, password);
-      } else {
-        throw new Error('Auth is not initialized');
-      }
+      if (!auth) throw new Error('Auth is not initialized');
+      await signInWithEmailAndPassword(auth, email, password);
     } catch (error) {
-      console.error("Login error:", error);
+      console.error('Login error:', error);
       throw error;
     }
   };
 
   const signup = async (email: string, password: string) => {
     try {
-      if (auth) {
-        await createUserWithEmailAndPassword(auth, email, password);
-      } else {
-        throw new Error('Auth is not initialized');
-      }
+      if (!auth) throw new Error('Auth is not initialized');
+      await createUserWithEmailAndPassword(auth, email, password);
     } catch (error) {
       console.error("Signup error:", error);
       throw error;

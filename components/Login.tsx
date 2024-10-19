@@ -22,8 +22,13 @@ const Login: React.FC<LoginProps> = ({ onSuccess, onError }) => {
       onSuccess();
     } catch (err) {
       console.error('Login error:', err);
-      setError('Failed to log in. Please check your email and password.');
-      onError('Failed to log in. Please check your email and password.');
+      if (err instanceof Error) {
+        setError(`Login failed: ${err.message}`);
+        onError(`Login failed: ${err.message}`);
+      } else {
+        setError('Failed to log in. Please try again.');
+        onError('Failed to log in. Please try again.');
+      }
     }
   };
 
