@@ -18,17 +18,24 @@ let auth: Auth;
 let db: Firestore;
 let analytics: Analytics;
 
-if (typeof window !== 'undefined' && !getApps().length) {
-  try {
-    console.log('Initializing Firebase with config:', JSON.stringify(firebaseConfig));
-    app = initializeApp(firebaseConfig);
-    auth = getAuth(app);
-    db = getFirestore(app);
-    analytics = getAnalytics(app);
-    console.log('Firebase initialized successfully');
-  } catch (error) {
-    console.error('Error initializing Firebase:', error);
+if (typeof window !== 'undefined') {
+  if (!getApps().length) {
+    try {
+      console.log('Initializing Firebase with config:', JSON.stringify(firebaseConfig));
+      app = initializeApp(firebaseConfig);
+    } catch (error) {
+      console.error('Error initializing Firebase:', error);
+    }
+  } else {
+    app = getApps()[0];
   }
+  
+  auth = getAuth(app);
+  db = getFirestore(app);
+  if (process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID) {
+    analytics = getAnalytics(app);
+  }
+  console.log('Firebase initialized successfully');
 }
 
 export { auth, db, analytics };
@@ -38,4 +45,11 @@ export function getFirestoreInstance(): Firestore {
     throw new Error('Firestore is not initialized');
   }
   return db;
+}
+
+export function getAuthInstance(): Auth {
+  if (!auth) {
+    throw new Error('Auth is not initialized');
+  }
+  return auth;
 }

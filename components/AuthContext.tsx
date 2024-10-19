@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut as firebaseSignOut } from 'firebase/auth';
-import { auth } from '../src/firebase';
+import { getAuthInstance } from '../src/firebase';
 import { useRouter } from 'next/navigation';
 
 interface AuthContextType {
@@ -29,22 +29,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const router = useRouter();
 
   useEffect(() => {
-    if (auth) {
-      const unsubscribe = onAuthStateChanged(auth, (user) => {
-        setUser(user);
-        setLoading(false);
-      });
-
-      return () => unsubscribe();
-    } else {
-      console.error('Auth is undefined');
+    const auth = getAuthInstance();
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user);
       setLoading(false);
-    }
+    });
+
+    return () => unsubscribe();
   }, []);
 
   const login = async (email: string, password: string) => {
     try {
-      if (!auth) throw new Error('Auth is not initialized');
+      const auth = getAuthInstance();
       await signInWithEmailAndPassword(auth, email, password);
     } catch (error) {
       console.error('Login error:', error);
@@ -54,7 +50,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signup = async (email: string, password: string) => {
     try {
-      if (!auth) throw new Error('Auth is not initialized');
+      const auth = getAuthInstance();
       await createUserWithEmailAndPassword(auth, email, password);
     } catch (error) {
       console.error("Signup error:", error);
@@ -64,13 +60,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signOut = async () => {
     try {
-      if (auth) {
-        await firebaseSignOut(auth);
-        setUser(null);
-        router.push('/');
-      } else {
-        throw new Error('Auth is not initialized');
-      }
+      const auth = getAuthInstance();
+      await firebaseSignOut(auth);
+      setUser(null);
+      router.push('/');
     } catch (error) {
       console.error("Sign out error:", error);
       throw error;
