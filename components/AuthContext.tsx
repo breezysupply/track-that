@@ -39,35 +39,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const login = async (email: string, password: string) => {
-    try {
-      const auth = getAuthInstance();
-      await signInWithEmailAndPassword(auth, email, password);
-    } catch (error) {
-      console.error('Login error:', error);
-      throw error;
-    }
+    const auth = getAuthInstance();
+    await signInWithEmailAndPassword(auth, email, password);
   };
 
   const signup = async (email: string, password: string) => {
-    try {
-      const auth = getAuthInstance();
-      await createUserWithEmailAndPassword(auth, email, password);
-    } catch (error) {
-      console.error("Signup error:", error);
-      throw error;
-    }
+    const auth = getAuthInstance();
+    await createUserWithEmailAndPassword(auth, email, password);
   };
 
   const signOut = async () => {
-    try {
-      const auth = getAuthInstance();
-      await firebaseSignOut(auth);
-      setUser(null);
-      router.push('/');
-    } catch (error) {
-      console.error("Sign out error:", error);
-      throw error;
-    }
+    const auth = getAuthInstance();
+    await firebaseSignOut(auth);
+    setUser(null);
+    router.push('/');
   };
 
   const value = {
