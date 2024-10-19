@@ -1,4 +1,4 @@
-import BudgetPageClient from '../../../components/BudgetPageClient';
+import BudgetPageClient from '/../components/BudgetPageClient';
 
 export default function BudgetPage({ params }: { params: { id: string } }) {
   return <BudgetPageClient id={params.id} />;

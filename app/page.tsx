@@ -48,7 +48,7 @@ export default function Home() {
       await runTransaction(db, async (transaction) => {
         console.log('Starting transaction');
         // Add the ended budget to history in Firestore
-        const historyRef = doc(collection(db, 'budget_history'));
+        const historyRef = doc(collection(db as Firestore, 'budget_history'));
         console.log('Adding to history:', endedBudget);
         transaction.set(historyRef, {
           ...endedBudget,
