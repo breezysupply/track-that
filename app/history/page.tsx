@@ -27,15 +27,19 @@ export default function History() {
   }, [user, loading, router]);
 
   const loadHistory = async () => {
-    if (!user) return;
-    const historyRef = collection(db, 'budget_history');
-    const q = query(historyRef, where('userId', '==', user.uid));
-    const querySnapshot = await getDocs(q);
-    const fetchedHistory = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as EndedBudget));
-    const sortedHistory = fetchedHistory.sort((a, b) => 
-      new Date(b.endedAt).getTime() - new Date(a.endedAt).getTime()
-    );
-    setHistory(sortedHistory);
+    if (!user || !db) return;
+    try {
+      const historyRef = collection(db, 'budget_history');
+      const q = query(historyRef, where('userId', '==', user.uid));
+      const querySnapshot = await getDocs(q);
+      const fetchedHistory = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as EndedBudget));
+      const sortedHistory = fetchedHistory.sort((a, b) => 
+        new Date(b.endedAt).getTime() - new Date(a.endedAt).getTime()
+      );
+      setHistory(sortedHistory);
+    } catch (error) {
+      console.error("Error loading history:", error);
+    }
   };
 
   const clearHistory = async () => {

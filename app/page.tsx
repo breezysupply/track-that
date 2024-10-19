@@ -27,7 +27,7 @@ export default function Home() {
   }, [user, loading]);
 
   const fetchBudgets = async () => {
-    if (!user) return;
+    if (!user || !db) return;
     try {
       const q = query(collection(db, 'budgets'), where('userId', '==', user.uid));
       const querySnapshot = await getDocs(q);

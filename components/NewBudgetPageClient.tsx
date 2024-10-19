@@ -24,6 +24,12 @@ export default function NewBudgetPageClient() {
   }
 
   const handleBudgetSet = async (amount: number, name: string) => {
+    if (!db) {
+      console.error("Firestore is not initialized");
+      alert("Failed to create budget. Please try again later.");
+      return;
+    }
+
     const newBudget = {
       userId: user.uid,
       name,
@@ -49,4 +55,3 @@ export default function NewBudgetPageClient() {
 
   return <InitialBudgetPopup onBudgetSet={handleBudgetSet} />;
 }
-

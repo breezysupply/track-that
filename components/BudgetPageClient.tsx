@@ -21,18 +21,23 @@ export default function BudgetPageClient({ id }: { id: string }) {
 
   useEffect(() => {
     const fetchBudget = async () => {
-      if (user) {
-        const docRef = doc(db, 'budgets', id);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists() && docSnap.data().userId === user.uid) {
-          setBudget({ id: docSnap.id, ...docSnap.data() } as Budget);
-        } else {
+      if (user && db) {
+        try {
+          const docRef = doc(db, 'budgets', id);
+          const docSnap = await getDoc(docRef);
+          if (docSnap.exists() && docSnap.data().userId === user.uid) {
+            setBudget({ id: docSnap.id, ...docSnap.data() } as Budget);
+          } else {
+            router.push('/');
+          }
+        } catch (error) {
+          console.error("Error fetching budget:", error);
           router.push('/');
         }
       }
     };
     fetchBudget();
-  }, [id, user, router]);
+  }, [id, user, router, db]);
 
   if (loading || !budget) {
     return <div>Loading budget... Please wait.</div>;
@@ -40,4 +45,3 @@ export default function BudgetPageClient({ id }: { id: string }) {
 
   return <TrackThatApp initialBudget={budget} />;
 }
-

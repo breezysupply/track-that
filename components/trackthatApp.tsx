@@ -25,7 +25,7 @@ export default function TrackThatApp({ initialBudget }: TrackThatAppProps) {
   }, [initialBudget]);
 
   useEffect(() => {
-    if (budget) {
+    if (budget && db) {
       const budgetToUpdate = {
         name: budget.name,
         amount: budget.amount,
@@ -37,9 +37,11 @@ export default function TrackThatApp({ initialBudget }: TrackThatAppProps) {
           date: t.date
         }))
       };
-      updateDoc(doc(db, 'budgets', budget.id), budgetToUpdate);
+      updateDoc(doc(db, 'budgets', budget.id), budgetToUpdate).catch(error => {
+        console.error("Error updating budget:", error);
+      });
     }
-  }, [budget]);
+  }, [budget, db]);
 
   if (!budget) {
     return <div>Loading budget details... Please wait.</div>;
