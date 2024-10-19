@@ -42,8 +42,8 @@ export default function Home() {
 
   const handleEndBudget = async (endedBudget: Budget) => {
     try {
-      if (!user) {
-        throw new Error("User not authenticated");
+      if (!user || !db) {
+        throw new Error("User not authenticated or database not initialized");
       }
       await runTransaction(db, async (transaction) => {
         console.log('Starting transaction');
