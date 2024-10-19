@@ -9,6 +9,7 @@ import { Transaction } from '../types/Transaction';
 import { updateDoc, doc, runTransaction, collection, Firestore } from 'firebase/firestore';
 import { getFirestoreInstance } from '../src/firebase';
 import { useRouter } from 'next/navigation';
+import { db } from '../src/firebase';
 
 interface TrackThatAppProps {
   initialBudget: Budget;
@@ -25,7 +26,8 @@ export default function TrackThatApp({ initialBudget }: TrackThatAppProps) {
   }, [initialBudget]);
 
   useEffect(() => {
-    if (budget && db) {
+    if (budget) {
+      const db = getFirestoreInstance();
       const budgetToUpdate = {
         name: budget.name,
         amount: budget.amount,
@@ -41,7 +43,7 @@ export default function TrackThatApp({ initialBudget }: TrackThatAppProps) {
         console.error("Error updating budget:", error);
       });
     }
-  }, [budget, db]);
+  }, [budget]);
 
   if (!budget) {
     return <div>Loading budget details... Please wait.</div>;
