@@ -1,3 +1,5 @@
+'use client';
+
 import './globals.css';
 import { Inter } from 'next/font/google';
 import { AuthProvider } from '../components/AuthContext';
@@ -16,9 +18,7 @@ export default function RootLayout({
         <AuthProvider>
           <div className="flex">
             <SideMenu />
-            <main className="flex-1 p-4">
-              {children}
-            </main>
+            <main className="flex-1">{children}</main>
           </div>
         </AuthProvider>
       </body>

@@ -1,0 +1,52 @@
+'use client';
+
+import React, { useState } from 'react';
+import Login from './Login';
+import Signup from './Signup';
+import { useRouter } from 'next/navigation';
+
+interface AuthModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSuccess: () => void;
+}
+
+const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess }) => {
+  const [isLogin, setIsLogin] = useState(true);
+  const [error, setError] = useState('');
+  const router = useRouter();
+
+  const handleSuccess = () => {
+    setError('');
+    onClose();
+    onSuccess();
+    router.push('/');
+  };
+
+  const handleError = (errorMessage: string) => {
+    setError(errorMessage);
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-gray-800 p-8 rounded-lg max-w-md w-full">
+        <h2 className="text-2xl font-bold mb-4 text-white">{isLogin ? 'Log In' : 'Sign Up'}</h2>
+        {isLogin ? 
+          <Login onSuccess={handleSuccess} onError={handleError} /> : 
+          <Signup onSuccess={handleSuccess} onError={handleError} />
+        }
+        {error && <p className="text-red-500 mt-2">{error}</p>}
+        <button
+          onClick={() => setIsLogin(!isLogin)}
+          className="mt-4 text-blue-400 hover:underline"
+        >
+          {isLogin ? 'Need an account? Sign up' : 'Already have an account? Log in'}
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default AuthModal;

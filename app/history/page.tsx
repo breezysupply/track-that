@@ -5,6 +5,7 @@ import { Budget } from '../../types/Budget';
 import { useAuth } from '../../components/AuthContext';
 import { collection, query, where, getDocs, writeBatch } from 'firebase/firestore';
 import { db } from '../../src/firebase';
+import { useRouter } from 'next/navigation';
 
 interface EndedBudget extends Budget {
   endedAt: string;
@@ -12,7 +13,18 @@ interface EndedBudget extends Budget {
 
 export default function History() {
   const [history, setHistory] = useState<EndedBudget[]>([]);
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!loading) {
+      if (!user) {
+        router.push('/');
+      } else {
+        loadHistory();
+      }
+    }
+  }, [user, loading, router]);
 
   const loadHistory = async () => {
     if (!user) return;
@@ -25,12 +37,6 @@ export default function History() {
     );
     setHistory(sortedHistory);
   };
-
-  useEffect(() => {
-    if (user) {
-      loadHistory();
-    }
-  }, [user]);
 
   const clearHistory = async () => {
     if (window.confirm('Are you sure you want to clear all history? This action cannot be undone.')) {
@@ -52,6 +58,12 @@ export default function History() {
       }
     }
   };
+
+  if (loading || !user) {
+    return <div className="flex justify-center items-center h-screen">
+      <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-100"></div>
+    </div>;
+  }
 
   return (
     <div className="container mx-auto px-4">

@@ -4,26 +4,29 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import AddBudgetCard from '../components/AddBudgetCard';
 import BudgetCard from '../components/BudgetCard';
+import AuthModal from '../components/AuthModal';
 import { Budget } from '../types/Budget';
 import { useAuth } from '../components/AuthContext';
-import { collection, query, where, getDocs, runTransaction } from 'firebase/firestore';
+import { collection, query, where, getDocs, runTransaction, doc } from 'firebase/firestore';
 import { db } from '../src/firebase';
 
 export default function Home() {
   const [budgets, setBudgets] = useState<Budget[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const { user, loading } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
     if (!loading) {
-      if (!user) {
-        router.push('/auth');
-      } else {
+      if (user) {
         fetchBudgets();
+      } else {
+        setShowAuthModal(true);
+        setIsLoading(false);
       }
     }
-  }, [user, loading, router]);
+  }, [user, loading]);
 
   const fetchBudgets = async () => {
     if (!user) return;
@@ -77,27 +80,35 @@ export default function Home() {
     }
   };
 
-  if (loading) {
-    return <div>Loading authentication...</div>;
-  }
+  const handleAuthSuccess = () => {
+    setShowAuthModal(false);
+    fetchBudgets();
+  };
 
-  if (isLoading) {
-    return <div>Loading budgets...</div>;
-  }
-
-  if (!user) {
-    return null;
+  if (loading || isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-100"></div>
+      </div>
+    );
   }
 
   return (
-    <div className="container mx-auto px-4 min-h-screen">
-      <h1 className="text-2xl font-bold mb-4 text-gray-100">Your Budgets</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {budgets.map((budget) => (
-          <BudgetCard key={budget.id} budget={budget} onEndBudget={handleEndBudget} />
-        ))}
-        <AddBudgetCard />
-      </div>
-    </div>
+    <>
+      {showAuthModal && (
+        <AuthModal isOpen={true} onClose={() => {}} onSuccess={handleAuthSuccess} />
+      )}
+      {user && (
+        <div className="container mx-auto px-4 py-8">
+          <h1 className="text-3xl font-bold mb-6 text-gray-100">Your Budgets</h1>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {budgets.map((budget) => (
+              <BudgetCard key={budget.id} budget={budget} onEndBudget={handleEndBudget} />
+            ))}
+            <AddBudgetCard />
+          </div>
+        </div>
+      )}
+    </>
   );
 }

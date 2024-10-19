@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import InitialBudgetPopup from '../../components/InitialBudgetPopup';
 import { useAuth } from '../../components/AuthContext';
@@ -9,18 +9,21 @@ import { db } from '../../src/firebase';
 
 export default function NewBudgetPage() {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
 
-  console.log('NewBudgetPage rendered, user:', user);
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/');
+    }
+  }, [user, loading, router]);
+
+  if (loading || !user) {
+    return <div className="flex justify-center items-center h-screen">
+      <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-100"></div>
+    </div>;
+  }
 
   const handleBudgetSet = async (amount: number, name: string) => {
-    console.log('handleBudgetSet called with:', amount, name);
-    if (!user) {
-      console.log('No user, redirecting to auth');
-      router.push('/auth');
-      return;
-    }
-
     const newBudget = {
       userId: user.uid,
       name,
@@ -44,10 +47,5 @@ export default function NewBudgetPage() {
     }
   };
 
-  return (
-    <div className="container mx-auto px-4">
-      <h1 className="text-2xl font-bold mb-4">Create New Budget</h1>
-      <InitialBudgetPopup onBudgetSet={handleBudgetSet} />
-    </div>
-  );
+  return <InitialBudgetPopup onBudgetSet={handleBudgetSet} />;
 }

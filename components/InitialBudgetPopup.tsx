@@ -30,7 +30,7 @@ export default function InitialBudgetPopup({ onBudgetSet }: InitialBudgetPopupPr
           />
         </div>
         <div>
-          <label htmlFor="amount" className="block text-sm font-medium text-gray-300">Initial Amount</label>
+          <label htmlFor="amount" className="block text-sm font-medium text-gray-300">Budget Amount</label>
           <input
             type="number"
             id="amount"
