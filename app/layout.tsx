@@ -18,7 +18,7 @@ export default function RootLayout({
         <AuthProvider>
           <div className="flex">
             <SideMenu />
-            <main className="flex-1">{children}</main>
+            <main className="flex-1 md:ml-64 p-4">{children}</main>
           </div>
         </AuthProvider>
       </body>

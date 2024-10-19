@@ -1,9 +1,7 @@
 'use client';
 
 import React from 'react';
-import dynamic from 'next/dynamic';
-
-const NewBudgetPageClient = dynamic(() => import('../../components/NewBudgetPageClient'), { ssr: false });
+import NewBudgetPageClient from '../../components/NewBudgetPageClient';
 
 export default function NewBudgetPage() {
   return <NewBudgetPageClient />;
