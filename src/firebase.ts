@@ -13,15 +13,21 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
 };
 
-let auth: Auth;
-let db: Firestore;
-let analytics: Analytics;
+let auth: Auth | undefined;
+let db: Firestore | undefined;
+let analytics: Analytics | undefined;
 
 if (typeof window !== 'undefined' && !getApps().length) {
-  const app = initializeApp(firebaseConfig);
-  auth = getAuth(app);
-  db = getFirestore(app);
-  analytics = getAnalytics(app);
+  try {
+    console.log('Initializing Firebase with config:', JSON.stringify(firebaseConfig));
+    const app = initializeApp(firebaseConfig);
+    auth = getAuth(app);
+    db = getFirestore(app);
+    analytics = getAnalytics(app);
+    console.log('Firebase initialized successfully');
+  } catch (error) {
+    console.error('Error initializing Firebase:', error);
+  }
 }
 
 export { auth, db, analytics };
