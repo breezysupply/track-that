@@ -3,7 +3,12 @@
 import React, { useState } from 'react';
 import { useAuth } from './AuthContext';
 
-const Signup: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
+interface SignupProps {
+  onSuccess: () => void;
+  onError: (errorMessage: string) => void;
+}
+
+const Signup: React.FC<SignupProps> = ({ onSuccess, onError }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -19,6 +24,7 @@ const [error, setError] = useState('');
     } catch (err) {
       console.error('Signup error:', err);
       setError('Failed to sign up. Please try again.');
+      onError('Failed to sign up. Please try again.');
     }
   };
 

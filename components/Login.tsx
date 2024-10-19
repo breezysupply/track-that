@@ -3,7 +3,12 @@
 import React, { useState } from 'react';
 import { useAuth } from './AuthContext';
 
-const Login: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
+interface LoginProps {
+  onSuccess: () => void;
+  onError: (errorMessage: string) => void;
+}
+
+const Login: React.FC<LoginProps> = ({ onSuccess, onError }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -18,6 +23,7 @@ const Login: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
     } catch (err) {
       console.error('Login error:', err);
       setError('Failed to log in. Please check your email and password.');
+      onError('Failed to log in. Please check your email and password.');
     }
   };
 
