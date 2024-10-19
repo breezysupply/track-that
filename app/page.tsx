@@ -8,6 +8,7 @@ import { Budget } from '../types/Budget';
 import { useAuth } from '../components/AuthContext';
 import { collection, query, where, getDocs, runTransaction, doc } from 'firebase/firestore';
 import { db } from '../src/firebase';
+import { Firestore } from 'firebase/firestore';
 
 export default function Home() {
   const [budgets, setBudgets] = useState<Budget[]>([]);
