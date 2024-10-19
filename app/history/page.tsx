@@ -44,7 +44,7 @@ export default function History() {
 
   const clearHistory = async () => {
     if (window.confirm('Are you sure you want to clear all history? This action cannot be undone.')) {
-      if (!user) return;
+      if (!user || !db) return;
       try {
         const historyRef = collection(db, 'budget_history');
         const q = query(historyRef, where('userId', '==', user.uid));
@@ -58,7 +58,7 @@ export default function History() {
         alert('History cleared successfully');
       } catch (error) {
         console.error("Error clearing history:", error);
-        alert("Failed to clear history. Please check your permissions and try again.");
+        alert('Failed to clear history. Please try again.');
       }
     }
   };
