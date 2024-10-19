@@ -6,7 +6,7 @@ import TransactionForm from './TransactionForm';
 import TransactionList from './TransactionList';
 import { Budget } from '../types/Budget';
 import { Transaction } from '../types/Transaction';
-import { updateDoc, doc, runTransaction, collection, Firestore } from 'firebase/firestore';
+import { updateDoc, doc, runTransaction, collection } from 'firebase/firestore';
 import { db } from '../src/firebase';
 import { useRouter } from 'next/navigation';
 
