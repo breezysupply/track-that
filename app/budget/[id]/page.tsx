@@ -8,6 +8,10 @@ import { useAuth } from '../../../components/AuthContext';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../../src/firebase';
 
+export async function generateStaticParams() {
+  return [];
+}
+
 export default function BudgetPage({ params }: { params: { id: string } }) {
   const [budget, setBudget] = useState<Budget | null>(null);
   const router = useRouter();
