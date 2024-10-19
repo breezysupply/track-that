@@ -1,6 +1,6 @@
 import { initializeApp, getApps } from 'firebase/app';
 import { getAuth, Auth } from 'firebase/auth';
-import { getFirestore, Firestore } from 'firebase/firestore';
+import { getFirestore as getFirestoreFromFirebase, Firestore } from 'firebase/firestore';
 import { getAnalytics, Analytics } from "firebase/analytics";
 
 const firebaseConfig = {
@@ -22,7 +22,7 @@ if (typeof window !== 'undefined' && !getApps().length) {
     console.log('Initializing Firebase with config:', JSON.stringify(firebaseConfig));
     const app = initializeApp(firebaseConfig);
     auth = getAuth(app);
-    db = getFirestore(app);
+    db = getFirestoreFromFirebase(app);
     analytics = getAnalytics(app);
     console.log('Firebase initialized successfully');
   } catch (error) {
@@ -31,3 +31,11 @@ if (typeof window !== 'undefined' && !getApps().length) {
 }
 
 export { auth, db, analytics };
+
+// Add this function at the end of the file
+export function getFirestoreInstance(): Firestore {
+  if (!db) {
+    throw new Error('Firestore is not initialized');
+  }
+  return db;
+}
