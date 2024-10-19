@@ -5,5 +5,5 @@ export default function BudgetPage({ params }: { params: { id: string } }) {
 }
 
 export async function generateStaticParams() {
-  return [{ id: 'placeholder' }];
+  return [];
 }
