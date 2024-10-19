@@ -15,30 +15,40 @@ const HomePage: React.FC = () => {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const { user, loading } = useAuth();
 
+  console.log('HomePage rendered. User:', user, 'Loading:', loading);
+
   useEffect(() => {
-    if (!loading && !user) {
-      setIsAuthModalOpen(true);
+    console.log('useEffect triggered. User:', user, 'Loading:', loading);
+    if (!loading) {
+      if (!user) {
+        console.log('No user, opening AuthModal');
+        setIsAuthModalOpen(true);
+      } else {
+        console.log('User found, fetching budgets');
+        fetchBudgets();
+      }
     }
   }, [user, loading]);
 
-  useEffect(() => {
-    const fetchBudgets = async () => {
-      if (user && db) {
+  const fetchBudgets = async () => {
+    if (user && db) {
+      try {
         const budgetsCollection = collection(db as Firestore, 'budgets');
         const q = query(budgetsCollection, where('userId', '==', user.uid));
         const querySnapshot = await getDocs(q);
         const fetchedBudgets = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Budget));
+        console.log('Fetched budgets:', fetchedBudgets);
         setBudgets(fetchedBudgets);
+      } catch (error) {
+        console.error('Error fetching budgets:', error);
       }
-    };
-
-    if (user) {
-      fetchBudgets();
     }
-  }, [user, db]);
+  };
 
   const handleAuthSuccess = () => {
+    console.log('Auth success, closing modal');
     setIsAuthModalOpen(false);
+    fetchBudgets();
   };
 
   const handleEndBudget = async (budgetToEnd: Budget) => {
@@ -65,6 +75,7 @@ const HomePage: React.FC = () => {
   };
 
   if (loading) {
+    console.log('Rendering loading spinner');
     return (
       <div className="flex justify-center items-center h-screen">
         <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-100"></div>
