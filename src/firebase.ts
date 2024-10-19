@@ -21,22 +21,40 @@ let analytics: Analytics | undefined;
 if (typeof window !== 'undefined') {
   if (!getApps().length) {
     try {
-      console.log('Initializing Firebase with config:', JSON.stringify(firebaseConfig));
+      console.log('Firebase config:', JSON.stringify(firebaseConfig, null, 2));
       app = initializeApp(firebaseConfig);
+      console.log('Firebase app initialized successfully');
     } catch (error) {
       console.error('Error initializing Firebase:', error);
-      throw error; // Re-throw the error to prevent further execution
+      console.error('Firebase config used:', JSON.stringify(firebaseConfig, null, 2));
+      throw error;
     }
   } else {
     app = getApps()[0];
   }
   
-  auth = getAuth(app);
-  db = getFirestore(app);
-  if (process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID) {
-    analytics = getAnalytics(app);
+  try {
+    auth = getAuth(app);
+    console.log('Firebase Auth initialized successfully');
+  } catch (error) {
+    console.error('Error initializing Firebase Auth:', error);
   }
-  console.log('Firebase initialized successfully');
+
+  try {
+    db = getFirestore(app);
+    console.log('Firestore initialized successfully');
+  } catch (error) {
+    console.error('Error initializing Firestore:', error);
+  }
+
+  if (process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID) {
+    try {
+      analytics = getAnalytics(app);
+      console.log('Firebase Analytics initialized successfully');
+    } catch (error) {
+      console.error('Error initializing Firebase Analytics:', error);
+    }
+  }
 }
 
 export { auth, db, analytics };

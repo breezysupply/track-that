@@ -29,13 +29,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const router = useRouter();
 
   useEffect(() => {
-    const auth = getAuthInstance();
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
+    try {
+      const auth = getAuthInstance();
+      console.log('Auth instance retrieved successfully');
+      const unsubscribe = onAuthStateChanged(auth, (user) => {
+        setUser(user);
+        setLoading(false);
+      });
+      return () => unsubscribe();
+    } catch (error) {
+      console.error('Error getting auth instance:', error);
       setLoading(false);
-    });
-
-    return () => unsubscribe();
+    }
   }, []);
 
   const login = async (email: string, password: string) => {
