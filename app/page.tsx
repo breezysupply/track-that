@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import AddBudgetCard from '../components/AddBudgetCard';
 import BudgetCard from '../components/BudgetCard';
 import AuthModal from '../components/AuthModal';
@@ -15,7 +14,6 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const { user, loading } = useAuth();
-  const router = useRouter();
 
   useEffect(() => {
     if (!loading) {

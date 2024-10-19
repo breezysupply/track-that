@@ -2,14 +2,12 @@
 
 import React, { useState } from 'react';
 import { useAuth } from './AuthContext';
-import { useRouter } from 'next/navigation';
 
 const Login: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const { login } = useAuth();
-  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
