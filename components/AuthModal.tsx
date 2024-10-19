@@ -30,7 +30,12 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess }) => 
     setError(errorMessage);
   };
 
-  if (!isOpen) return null;
+  if (!isOpen) {
+    console.log('AuthModal not open, returning null');
+    return null;
+  }
+
+  console.log('Rendering AuthModal content');
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
