@@ -16,14 +16,17 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess }) => 
   const [error, setError] = useState('');
   const router = useRouter();
 
+  console.log('AuthModal rendered. isOpen:', isOpen);
+
   const handleSuccess = () => {
+    console.log('Auth success');
     setError('');
     onClose();
     onSuccess();
-    router.push('/');
   };
 
   const handleError = (errorMessage: string) => {
+    console.error('Auth error:', errorMessage);
     setError(errorMessage);
   };
 
