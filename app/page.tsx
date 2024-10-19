@@ -46,7 +46,7 @@ export default function Home() {
       if (!user || !db) {
         throw new Error("User not authenticated or database not initialized");
       }
-      await runTransaction(db, async (transaction) => {
+      await runTransaction(db as Firestore, async (transaction) => {
         console.log('Starting transaction');
         // Add the ended budget to history in Firestore
         const historyRef = doc(collection(db as Firestore, 'budget_history'));
@@ -58,7 +58,7 @@ export default function Home() {
         });
 
         // Delete the budget from Firestore
-        const budgetRef = doc(db, 'budgets', endedBudget.id);
+        const budgetRef = doc(db as Firestore, 'budgets', endedBudget.id);
         console.log('Deleting budget:', endedBudget.id);
         transaction.delete(budgetRef);
       });
