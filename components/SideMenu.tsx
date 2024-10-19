@@ -5,11 +5,24 @@ import Link from 'next/link';
 import { Menu, X } from 'lucide-react';
 // Remove the import for SignOutButton as it's causing an error
 // import SignOutButton from './SignOutButton';
+import { useAuth } from './AuthContext';
+import { useRouter } from 'next/navigation';
 
 export default function SideMenu() {
   const [isOpen, setIsOpen] = useState(false);
+  const { user, signOut } = useAuth();
+  const router = useRouter();
 
   const toggleMenu = () => setIsOpen(!isOpen);
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      router.push('/');
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
 
   return (
     <>
@@ -31,11 +44,13 @@ export default function SideMenu() {
               History
             </Link>
           </li>
-          <li className="mt-6">
-            <button className="block py-2 px-4 hover:bg-gray-700 rounded">
-              Sign Out
-            </button>
-          </li>
+          {user && (
+            <li className="mt-6">
+              <button onClick={handleSignOut} className="block py-2 px-4 hover:bg-gray-700 rounded">
+                Sign Out
+              </button>
+            </li>
+          )}
         </ul>
       </nav>
       <button
