@@ -16,7 +16,7 @@ export default function SideMenu() {
         </li>
         <li className="mb-2">
           <Link href="/new-budget" className="block py-2 px-4 hover:bg-gray-700 rounded">
-            New Budget
+            Add New Budget
           </Link>
         </li>
         <li className="mb-2">
