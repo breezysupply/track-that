@@ -6,7 +6,7 @@ import TransactionForm from './TransactionForm';
 import TransactionList from './TransactionList';
 import { Budget } from '../types/Budget';
 import { Transaction } from '../types/Transaction';
-import { updateDoc, doc, runTransaction, collection } from 'firebase/firestore';
+import { updateDoc, doc, runTransaction, collection, Firestore } from 'firebase/firestore';
 import { db } from '../src/firebase';
 import { useRouter } from 'next/navigation';
 
@@ -79,18 +79,17 @@ export default function TrackThatApp({ initialBudget }: TrackThatAppProps) {
   };
 
   const endBudget = async () => {
-    if (budget) {
+    if (budget && db) {
       try {
         const endedBudget = {
           ...budget,
           endedAt: new Date().toISOString()
         };
 
-        await runTransaction(db as Firestore, async (transaction) => {
+        await runTransaction(db, async (transaction) => {
           // Add the ended budget to history in Firestore
-          const historyRef = doc(collection(db as Firestore, 'budget_history'));
+          const historyRef = doc(collection(db, 'budget_history'));
           transaction.set(historyRef, endedBudget);
-
           // Delete the budget from Firestore
           const budgetRef = doc(db, 'budgets', budget.id);
           transaction.delete(budgetRef);
@@ -102,6 +101,8 @@ export default function TrackThatApp({ initialBudget }: TrackThatAppProps) {
         console.error("Error ending budget:", error);
         alert("Failed to end budget. Please try again.");
       }
+    } else {
+      alert("Budget not found or database not initialized");
     }
   };
 
