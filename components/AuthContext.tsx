@@ -44,7 +44,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = async (email: string, password: string) => {
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      if (auth) {
+        await signInWithEmailAndPassword(auth, email, password);
+      } else {
+        throw new Error('Auth is not initialized');
+      }
     } catch (error) {
       console.error("Login error:", error);
       throw error;
@@ -53,7 +57,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signup = async (email: string, password: string) => {
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      if (auth) {
+        await createUserWithEmailAndPassword(auth, email, password);
+      } else {
+        throw new Error('Auth is not initialized');
+      }
     } catch (error) {
       console.error("Signup error:", error);
       throw error;
@@ -62,9 +70,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signOut = async () => {
     try {
-      await firebaseSignOut(auth);
-      setUser(null);
-      router.push('/');
+      if (auth) {
+        await firebaseSignOut(auth);
+        setUser(null);
+        router.push('/');
+      } else {
+        throw new Error('Auth is not initialized');
+      }
     } catch (error) {
       console.error("Sign out error:", error);
       throw error;

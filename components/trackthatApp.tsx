@@ -86,9 +86,9 @@ export default function TrackThatApp({ initialBudget }: TrackThatAppProps) {
           endedAt: new Date().toISOString()
         };
 
-        await runTransaction(db, async (transaction) => {
+        await runTransaction(db as Firestore, async (transaction) => {
           // Add the ended budget to history in Firestore
-          const historyRef = doc(collection(db, 'budget_history'));
+          const historyRef = doc(collection(db as Firestore, 'budget_history'));
           transaction.set(historyRef, endedBudget);
 
           // Delete the budget from Firestore
